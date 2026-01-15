@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { runDailyReset } from "@/lib/dailyReset";
 
+// Prevent static analysis during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   // Verify this is a cron job
   const authHeader = request.headers.get("authorization");

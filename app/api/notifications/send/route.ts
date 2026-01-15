@@ -3,6 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { sendPushNotification } from "@/lib/push";
 import { format, parse } from "date-fns";
 
+// Prevent static analysis during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   // Verify this is a cron job (add your cron secret)
   const authHeader = request.headers.get("authorization");

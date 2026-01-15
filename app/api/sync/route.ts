@@ -3,6 +3,10 @@ import { requireAuth } from "@/lib/auth-utils";
 import { logHabit } from "@/app/actions/habitLogs";
 import { createHabit, updateHabit, deleteHabit } from "@/app/actions/habits";
 
+// Prevent static analysis during build
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     await requireAuth();
