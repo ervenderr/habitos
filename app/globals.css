@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark mode first - very dark navy/slate background */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    
+    /* Cards - slightly lighter than background */
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
+    
+    /* Popover */
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 98%;
+    
+    /* Primary - Purple (#7154cd) */
+    --primary: 258 58% 58%;
+    --primary-foreground: 210 40% 98%;
+    
+    /* Secondary - Dark slate */
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    
+    /* Muted - Subtle gray */
+    --muted: 217 33% 20%;
+    --muted-foreground: 215 20% 65%;
+    
+    /* Accent - Purple tint */
+    --accent: 258 30% 20%;
+    --accent-foreground: 210 40% 98%;
+    
+    /* Destructive - Pink (#da5d7b) */
+    --destructive: 345 65% 60%;
+    --destructive-foreground: 210 40% 98%;
+    
+    /* Borders - Subtle */
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 258 58% 58%;
+    
+    /* Chart colors */
+    --chart-1: 258 58% 58%; /* Purple */
+    --chart-2: 45 85% 60%;   /* Gold */
+    --chart-3: 345 65% 60%;  /* Pink */
+    --chart-4: 217 33% 40%;  /* Gray */
+    --chart-5: 210 40% 70%;  /* Light gray */
+    
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    /* Safe area padding for iPhone notches */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Mobile touch improvements */
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Custom scrollbar for calendar */
+  .overflow-x-auto::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-track {
+    background: hsl(var(--secondary));
+    border-radius: 4px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+@layer utilities {
+  /* Gold glow for completed habits */
+  .gold-glow {
+    box-shadow: 0 0 20px rgba(226, 188, 72, 0.3);
+  }
+  
+  /* Pink accent for missed habits */
+  .pink-accent {
+    border-left: 3px solid #da5d7b;
+  }
+  
+  /* Gold pulse animation */
+  @keyframes gold-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(226, 188, 72, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(226, 188, 72, 0);
+    }
+  }
+  
+  .animate-gold-pulse {
+    animation: gold-pulse 0.6s ease-out;
+  }
+  
+  /* Pink shake animation */
+  @keyframes pink-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  
+  .animate-pink-shake {
+    animation: pink-shake 0.5s ease-in-out;
+  }
+}
+

@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  habits       Habit[]
+  dailyNotes   DailyNote[]
+  notificationSettings NotificationSetting?
+  systemSettings       SystemSettings?
+  pushSubscriptions    PushSubscription[]
+}
+
+model Habit {
+  id          String     @id @default(uuid())
+  userId      String
+  name        String
+  description String?
+  type        String     @default("binary") // "binary" | "count"
+  target      Int        @default(1) // 1 for binary, >1 for count
+  frequency   String     @default("daily") // daily, weekly, etc.
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs        HabitLog[]
+  
+  @@index([userId])
+  @@index([userId, active])
+}
+
+model HabitLog {
+  id        String   @id @default(uuid())
+  habitId   String
+  date      String   // YYYY-MM-DD format
+  progress  Int      @default(0) // Current progress (0 or 1 for binary, 0-target for count)
+  completed Boolean  @default(false) // Auto-calculated: progress >= target
+  habit     Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
+  
+  @@unique([habitId, date])
+  @@index([habitId, date])
+  @@index([date])
+}
+
+model DailyNote {
+  id        String   @id @default(uuid())
+  userId    String
+  date      String   // YYYY-MM-DD format
+  mood      Int?     // 1-5
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+model NotificationSetting {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  habitReminderTime String?  // HH:MM format
+  dailyReviewTime   String?  // HH:MM format
+  enabled           Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SystemSettings {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  dayResetTime String   @default("00:00") // HH:MM format
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PushSubscription {
+  id         String   @id @default(uuid())
+  userId     String
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+}
+
